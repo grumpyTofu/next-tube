@@ -32,10 +32,30 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
     },
     drawer: {
+      flexShrink: 0,
+      whiteSpace: "nowrap",
       [theme.breakpoints.up("sm")]: {
+        width: theme.spacing(7) + 1,
+      },
+      [theme.breakpoints.up("md")]: {
+        width: theme.spacing(9) + 1,
+      },
+      [theme.breakpoints.up("lg")]: {
         width: drawerWidth,
         flexShrink: 0,
       },
+    },
+    drawerMini: {
+      flexShrink: 0,
+      whiteSpace: "nowrap",
+      width: theme.spacing(7) + 1,
+    },
+    drawerOpenMini: {
+      width: theme.spacing(7) + 1,
+      transition: theme.transitions.create("width", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     },
     drawerOpen: {
       width: drawerWidth,
@@ -50,8 +70,15 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: "hidden",
-      width: theme.spacing(7) + 1,
+      //   width: theme.spacing(7) + 1,
+      [theme.breakpoints.down("xs")]: {
+        display: "none",
+        width: 0,
+      },
       [theme.breakpoints.up("sm")]: {
+        width: theme.spacing(7) + 1,
+      },
+      [theme.breakpoints.up("md")]: {
         width: theme.spacing(9) + 1,
       },
     },
@@ -61,10 +88,6 @@ const useStyles = makeStyles((theme: Theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      //   [theme.breakpoints.up("sm")]: {
-      //     width: `calc(100% - ${drawerWidth}px)`,
-      //     marginLeft: drawerWidth,
-      //   },
     },
     appBarShift: {
       marginLeft: drawerWidth,
@@ -110,6 +133,7 @@ const Layout: React.FC<LayoutProps> = ({ children, window }) => {
   const theme = useTheme();
   const isLarge = useMediaQuery(theme.breakpoints.up("lg"));
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isMini = useMediaQuery(theme.breakpoints.between("xs", "sm"));
 
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -192,47 +216,58 @@ const Layout: React.FC<LayoutProps> = ({ children, window }) => {
           <Typography variant="h6" noWrap>
             Responsive drawer
           </Typography>
+          {isMobile && <div>Mobile true</div>}
+          {isMini && <div>Mini true</div>}
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            className={clsx(classes.drawer, {
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open,
-            })}
-            classes={{
-              paper: clsx({
+      <Drawer
+        container={isMobile ? container : undefined}
+        className={
+          isMini
+            ? isMobile
+              ? undefined
+              : clsx({
+                  [classes.drawerOpenMini]: open,
+                  [classes.drawerClose]: !open,
+                })
+            : clsx(classes.drawer, {
                 [classes.drawerOpen]: open,
                 [classes.drawerClose]: !open,
-              }),
-            }}
-            variant="permanent"
-            onClose={handleDrawerToggle}
-            open={open}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+              })
+        }
+        classes={
+          isMobile
+            ? {
+                paper: classes.drawerPaper,
+              }
+            : isMini
+            ? {
+                paper: clsx(classes.drawerMini, {
+                  [classes.drawerOpen]: open,
+                  [classes.drawerClose]: !open,
+                }),
+              }
+            : {
+                paper: clsx(classes.drawer, {
+                  [classes.drawerOpen]: open,
+                  [classes.drawerClose]: !open,
+                }),
+              }
+        }
+        variant={isMobile ? "temporary" : "permanent"}
+        onClose={handleDrawerToggle}
+        open={isMobile ? mobileOpen : open}
+        ModalProps={
+          isMobile
+            ? {
+                keepMounted: true, // Better open performance on mobile.
+              }
+            : undefined
+        }
+        anchor={theme.direction === "rtl" ? "right" : "left"}
+      >
+        {drawer}
+      </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {children}
