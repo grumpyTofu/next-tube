@@ -1,24 +1,29 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
+import {
+  configureStore,
+  ThunkAction,
+  Action,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
+import counterReducer from "../features/counter/counterSlice";
+import { useDispatch } from "react-redux";
+import { videosApi } from "./services/video";
 
-import counterReducer from '../features/counter/counterSlice'
+const store = configureStore({
+  reducer: {
+    counter: counterReducer,
+    [videosApi.reducerPath]: videosApi.reducer,
+  },
+  middleware: getDefaultMiddleware().concat(videosApi.middleware),
+});
 
-export function makeStore() {
-  return configureStore({
-    reducer: { counter: counterReducer },
-  })
-}
-
-const store = makeStore()
-
-export type AppState = ReturnType<typeof store.getState>
-
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
-  AppState,
+  RootState,
   unknown,
   Action<string>
->
+>;
 
-export default store
+export default store;

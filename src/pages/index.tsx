@@ -1,59 +1,40 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { GetServerSideProps, NextPage } from "next";
+import { Grid } from "@material-ui/core";
+import Dashboard from "../features/dashboard/Dashboard";
+import { ClientSafeProvider, getProviders, useSession } from "next-auth/client";
+import Layout from "../features/layout/Layout";
+import Login from "../features/auth/Login";
 
-import Counter from "../features/counter/Counter";
-import styles from "../styles/Home.module.css";
+interface IndexPageProps {
+  providers: Record<string, ClientSafeProvider> | null;
+}
 
-const IndexPage: NextPage = () => {
+const IndexPage: NextPage<IndexPageProps> = ({ providers }) => {
+  const [session, loading] = useSession();
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <img src="/logo.svg" className={styles.logo} alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className={styles.link}
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className={styles.link}
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className={styles.link}
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className={styles.link}
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <>
+      {loading ? (
+        <div>loading...</div>
+      ) : (
+        <>
+          {session ? (
+            <Layout>
+              <Dashboard />
+            </Layout>
+          ) : (
+            <Login providers={providers} />
+          )}
+        </>
+      )}
+    </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<IndexPageProps> = async (context) => {
+  const providers = await getProviders();
+  return {
+    props: { providers },
+  };
 };
 
 export default IndexPage;
