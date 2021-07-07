@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       minHeight: "50vh",
+      backgroundColor: theme.palette.primary.light,
     },
     center: {
       display: "flex",
@@ -53,18 +54,20 @@ const Login: NextPage<LoginProps> = ({ providers }) => {
       <Grid container className={classes.gridContainer} justify="center" alignItems="center">
         <Grid item xs={10} sm={8} md={6} lg={4}>
           <Card className={clsx(classes.card, classes.glass)}>
+            <div className={classes.spacer} />
             <CardContent className={clsx(classes.center, classes.cardContentItem)}>
-              <Typography variant="h4">Next Tube</Typography>
+              <Typography variant="h3">Next Tube</Typography>
             </CardContent>
-            <CardContent className={clsx(classes.center, classes.spacer)} />
+            <div className={classes.spacer} />
             {providers &&
               Object.values(providers).map((provider) => (
                 <CardActions className={clsx(classes.center, classes.cardContentItem)} key={provider.name}>
-                  <Button variant="contained" color="primary" onClick={() => signIn(provider.id, { redirect: false })} style={{ width: "50%" }}>
+                  <Button variant="contained" color="secondary" onClick={() => signIn(provider.id, { redirect: false })} style={{ width: "50%" }}>
                     Login with {provider.name}
                   </Button>
                 </CardActions>
               ))}
+            <div className={classes.spacer} />
           </Card>
         </Grid>
       </Grid>

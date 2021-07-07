@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store";
+import { PURGE } from "redux-persist";
 
 interface Thumbnail {
   url: string;
@@ -59,7 +59,7 @@ export interface VideoResponse {
 
 // Create our baseQuery instance
 const baseQuery = fetchBaseQuery({
-  baseUrl: '/api'
+  baseUrl: "/api",
 });
 
 const baseQueryWithRetry = retry(baseQuery, { maxRetries: 6 });
@@ -67,13 +67,14 @@ const baseQueryWithRetry = retry(baseQuery, { maxRetries: 6 });
 export const videosApi = createApi({
   reducerPath: "videos",
   baseQuery: baseQueryWithRetry,
+  refetchOnFocus: false,
+  tagTypes: ["Videos"],
   endpoints: (builder) => ({
-    fetchVideos: builder.query<VideoResponse, void>({
-      query: () => 'videos'
+    fetchTrendingVideos: builder.query<VideoResponse, void>({
+      query: () => "videos",
+      providesTags: ["Videos"],
     }),
   }),
 });
 
-export const {
-  useFetchVideosQuery
-} = videosApi;
+export const { useFetchTrendingVideosQuery } = videosApi;

@@ -7,6 +7,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 
 import SearchBar from "../SearchBar";
+import { persistor } from "../../app/store";
 
 const drawerWidth = 240;
 
@@ -32,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     menuButton: {
       marginRight: theme.spacing(2),
+      [theme.breakpoints.down("sm")]: {
+        marginLeft: -theme.spacing(2.5),
+      },
     },
     spacer: {
       flexGrow: 1,
@@ -46,6 +50,11 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isMobile, handleDrawerToggle }) => {
   const classes = useStyles();
+  const handleSignOut = () => {
+    persistor.purge().then(() => {
+      signOut({ redirect: false });
+    });
+  };
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <Toolbar>
@@ -62,7 +71,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMobile, handleDrawerToggle }) => {
           <SearchBar />
         )}
         <div className={classes.spacer} />
-        <IconButton onClick={() => signOut({ redirect: false })}>
+        <IconButton onClick={handleSignOut}>
           <Avatar>A</Avatar>
         </IconButton>
       </Toolbar>

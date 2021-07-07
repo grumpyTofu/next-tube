@@ -1,17 +1,8 @@
 import React from "react";
-import {
-  topDrawerConfig,
-  middleDrawerConfig,
-  closedDrawerConfig,
-} from "./ListItems";
-import {
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { topDrawerConfig, middleDrawerConfig, closedDrawerConfig } from "./ListItems";
+import { Divider, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { makeStyles, Theme, createStyles, useTheme } from "@material-ui/core/styles";
+import { useMediaQuery } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,6 +23,9 @@ interface DrawerContentProps {
 
 const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const isMedium = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
     <div>
       <div className={classes.toolbar} />
@@ -39,9 +33,8 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
       {!open ? (
         <List>
           {closedDrawerConfig.map((item) => (
-            <ListItem button key={item.text}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+            <ListItem button key={item.text} style={{ paddingRight: 0, paddingLeft: 0 }}>
+              <ListItemIcon style={{ marginTop: "4px", marginBottom: "4px", justifyContent: "center", width: "100%" }}>{item.icon}</ListItemIcon>
             </ListItem>
           ))}
         </List>
@@ -49,7 +42,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
         <>
           <List>
             {topDrawerConfig.map((item) => (
-              <ListItem button key={item.text}>
+              <ListItem button key={item.text} style={isMedium ? { paddingLeft: "24px" } : {}}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItem>
@@ -58,7 +51,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
           <Divider />
           <List>
             {middleDrawerConfig.map((item) => (
-              <ListItem button key={item.text}>
+              <ListItem button key={item.text} style={isMedium ? { paddingLeft: "24px" } : {}}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItem>

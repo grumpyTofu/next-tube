@@ -1,9 +1,9 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { Grid } from "@material-ui/core";
-import Dashboard from "../features/dashboard/Dashboard";
+import Dashboard from "../components/Dashboard";
 import { ClientSafeProvider, getProviders, useSession } from "next-auth/client";
-import Layout from "../features/layout/Layout";
-import Login from "../features/auth/Login";
+import Layout from "../components/layout/Layout";
+import Login from "../components/Login";
 
 interface IndexPageProps {
   providers: Record<string, ClientSafeProvider> | null;

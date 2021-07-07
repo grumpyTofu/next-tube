@@ -1,16 +1,16 @@
 import { Grid, Button, Card, CardContent, CardMedia } from "@material-ui/core";
 import React from "react";
-import { useFetchVideosQuery } from "../../app/services/video";
+import { useFetchTrendingVideosQuery } from "../app/services/video";
 
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
-  const { data, isLoading } = useFetchVideosQuery();
+  const { data, isFetching } = useFetchTrendingVideosQuery();
 
   console.log(data);
   return (
-    <Grid container spacing={2} justify='center'>
-      {isLoading && <div>loading...</div>}
+    <Grid container spacing={2} justify="center">
+      {isFetching && <div>loading...</div>}
       {data &&
         data.items.map((video) => (
           <Grid item xs={9} sm={6} md={4} lg={3} xl={2} key={video.id}>
@@ -25,7 +25,6 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             </Card>
           </Grid>
         ))}
-      {!data && !isLoading && <div>Data not found</div>}
     </Grid>
   );
 };

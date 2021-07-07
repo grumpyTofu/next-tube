@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
+
 import { Provider } from "next-auth/client";
 import { Provider as ReduxProvider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+
 import type { AppProps } from "next/app";
 
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme, { lightTheme } from "../styles/theme";
 
-import store from "../app/store";
+import { store, persistor } from "../app/store";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // Use the <Provider> to improve performance and allow components that call
@@ -53,11 +56,13 @@ export default function App({ Component, pageProps }: AppProps) {
         session={pageProps.session}
       >
         <ReduxProvider store={store}>
-          <ThemeProvider theme={!prefersDarkMode ? lightTheme : theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-            <Component {...pageProps} />
-          </ThemeProvider>
+          <PersistGate persistor={persistor}>
+            <ThemeProvider theme={!prefersDarkMode ? lightTheme : theme}>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </PersistGate>
         </ReduxProvider>
       </Provider>
     </>
