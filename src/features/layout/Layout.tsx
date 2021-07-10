@@ -8,6 +8,7 @@ import clsx from "clsx";
 import { useEffect } from "react";
 import DrawerContent from "./DrawerContent";
 import Navbar from "./Navbar";
+import { useSession } from "next-auth/client";
 
 const drawerWidth = 240;
 
@@ -111,6 +112,8 @@ const Layout: React.FC<LayoutProps> = ({ children, window }) => {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
+  const [session, loading] = useSession();
+
   const handleDrawerToggle = () => {
     if (isMobile) {
       setMobileOpen(!mobileOpen);
@@ -135,7 +138,11 @@ const Layout: React.FC<LayoutProps> = ({ children, window }) => {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
-  return (
+  return loading ? (
+    <div>Loading...</div>
+  ) : !session ? (
+    <>{children}</>
+  ) : (
     <div className={classes.root}>
       <CssBaseline />
       <Navbar isMobile={isMobile} handleDrawerToggle={handleDrawerToggle} />

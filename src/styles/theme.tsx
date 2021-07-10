@@ -7,6 +7,7 @@ const theme = createMuiTheme({
     primary: {
       main: "#202020",
       dark: "#181818",
+      light: "#202020",
     },
     secondary: {
       main: "#FF0000",
@@ -28,13 +29,13 @@ const theme = createMuiTheme({
     },
     MuiCard: {
       root: {
-        background: 'transparent'
-      }
+        background: "transparent",
+      },
     },
     MuiCardContent: {
       root: {
-        color: 'white'
-      }
+        color: "white",
+      },
     },
     MuiTypography: {
       root: {

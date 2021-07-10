@@ -1,8 +1,10 @@
 import React from "react";
-import { topDrawerConfig, middleDrawerConfig, closedDrawerConfig } from "./ListItems";
+import { topDrawerConfig, middleDrawerConfig, closedDrawerConfig } from "./DrawerConfig";
+import DrawerItem from "./DrawerItem";
 import { Divider, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import { makeStyles, Theme, createStyles, useTheme } from "@material-ui/core/styles";
 import { useMediaQuery } from "@material-ui/core";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,7 +27,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
   const classes = useStyles();
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.up("md"));
-
+  const router = useRouter();
   return (
     <div>
       <div className={classes.toolbar} />
@@ -33,28 +35,40 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
       {!open ? (
         <List>
           {closedDrawerConfig.map((item) => (
-            <ListItem button key={item.text} style={{ paddingRight: 0, paddingLeft: 0 }}>
-              <ListItemIcon style={{ marginTop: "4px", marginBottom: "4px", justifyContent: "center", width: "100%" }}>{item.icon}</ListItemIcon>
-            </ListItem>
+            <DrawerItem
+              button
+              onClick={() => router.push(item.route)}
+              item={item}
+              style={{ paddingRight: 0, paddingLeft: 0 }}
+              textVisible={false}
+              listItemIconStyles={{ marginTop: "4px", marginBottom: "4px", justifyContent: "center", width: "100%" }}
+              key={item.text}
+            />
           ))}
         </List>
       ) : (
         <>
           <List>
             {topDrawerConfig.map((item) => (
-              <ListItem button key={item.text} style={isMedium ? { paddingLeft: "24px" } : {}}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItem>
+              <DrawerItem
+                button
+                onClick={() => router.push(item.route)}
+                item={item}
+                style={isMedium ? { paddingLeft: "24px" } : {}}
+                key={item.text}
+              />
             ))}
           </List>
           <Divider />
           <List>
             {middleDrawerConfig.map((item) => (
-              <ListItem button key={item.text} style={isMedium ? { paddingLeft: "24px" } : {}}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItem>
+              <DrawerItem
+                button
+                onClick={() => router.push(item.route)}
+                item={item}
+                style={isMedium ? { paddingLeft: "24px" } : {}}
+                key={item.text}
+              />
             ))}
           </List>
           <Divider />

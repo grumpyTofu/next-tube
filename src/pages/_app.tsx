@@ -13,6 +13,9 @@ import theme, { lightTheme } from "../styles/theme";
 
 import { store, persistor } from "../app/store";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { ContactsOutlined } from "@material-ui/icons";
+import Layout from "../features/layout/Layout";
+import AuthLock from "../features/auth/AuthLock";
 
 // Use the <Provider> to improve performance and allow components that call
 // `useSession()` anywhere in your application to access the `session` object.
@@ -26,7 +29,6 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
   return (
     <>
       <Head>
@@ -55,15 +57,19 @@ export default function App({ Component, pageProps }: AppProps) {
         }}
         session={pageProps.session}
       >
-        <ReduxProvider store={store}>
-          <PersistGate persistor={persistor}>
-            <ThemeProvider theme={!prefersDarkMode ? lightTheme : theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
-              <Component {...pageProps} />
-            </ThemeProvider>
-          </PersistGate>
-        </ReduxProvider>
+        <AuthLock>
+          <ReduxProvider store={store}>
+            <PersistGate persistor={persistor}>
+              <ThemeProvider theme={!prefersDarkMode ? lightTheme : theme}>
+                {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+                <CssBaseline />
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </ThemeProvider>
+            </PersistGate>
+          </ReduxProvider>
+        </AuthLock>
       </Provider>
     </>
   );

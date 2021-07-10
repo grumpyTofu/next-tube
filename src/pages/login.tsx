@@ -1,11 +1,11 @@
 import { Button, Card, CardActions, CardContent, Container, Grid, Typography } from "@material-ui/core";
 import React from "react";
 
-import { ClientSafeProvider, signIn } from "next-auth/client";
+import { ClientSafeProvider, getProviders, signIn } from "next-auth/client";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,11 +42,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface LoginProps {
+interface LoginPageProps {
   providers: Record<string, ClientSafeProvider> | null;
 }
 
-const Login: NextPage<LoginProps> = ({ providers }) => {
+const LoginPage: NextPage<LoginPageProps> = ({ providers }) => {
   const classes = useStyles();
 
   return (
@@ -75,4 +75,11 @@ const Login: NextPage<LoginProps> = ({ providers }) => {
   );
 };
 
-export default Login;
+export const getServerSideProps: GetServerSideProps<LoginPageProps> = async (context) => {
+  const providers = await getProviders();
+  return {
+    props: { providers },
+  };
+};
+
+export default LoginPage;

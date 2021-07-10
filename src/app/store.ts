@@ -3,17 +3,17 @@ import { configureStore, ThunkAction, Action, getDefaultMiddleware, combineReduc
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import { utilityMiddleware } from "./services/utility";
-import { videosApi } from "./services/video";
+import { youtubeApi } from "./services/youtube";
 
 const rootReducer = combineReducers({
-  [videosApi.reducerPath]: videosApi.reducer,
+  [youtubeApi.reducerPath]: youtubeApi.reducer,
 });
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
+  blacklist: [youtubeApi.reducerPath],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -24,9 +24,7 @@ export const store = configureStore({
     serializableCheck: {
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
     },
-  })
-    .concat(utilityMiddleware)
-    .concat(videosApi.middleware),
+  }).concat(youtubeApi.middleware),
 });
 
 // setupListeners(store.dispatch);

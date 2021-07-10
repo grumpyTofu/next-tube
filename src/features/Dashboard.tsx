@@ -1,6 +1,6 @@
 import { Grid, Button, Card, CardContent, CardMedia } from "@material-ui/core";
 import React from "react";
-import { useFetchTrendingVideosQuery } from "../app/services/video";
+import { useFetchTrendingVideosQuery } from "../app/services/youtube";
 
 interface DashboardProps {}
 
