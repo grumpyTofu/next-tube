@@ -1,6 +1,6 @@
 import NextAuth, { User } from "next-auth";
 import Providers from "next-auth/providers";
-import { scopes } from "../../../google";
+import { scopes } from "../../../utils/google";
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options

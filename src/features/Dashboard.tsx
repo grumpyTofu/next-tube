@@ -1,11 +1,11 @@
 import { Grid, Button, Card, CardContent, CardMedia } from "@material-ui/core";
 import React from "react";
-import { useFetchTrendingVideosQuery } from "../app/services/youtube";
+import { useFetchVideosByCategoryQuery } from "../app/services/videos";
 
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
-  const { data, isFetching } = useFetchTrendingVideosQuery();
+  const { data, isFetching } = useFetchVideosByCategoryQuery(undefined);
 
   console.log(data);
   return (
