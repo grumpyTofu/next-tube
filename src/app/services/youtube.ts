@@ -13,6 +13,6 @@ export const youtubeApi = createApi({
   reducerPath: "youtube",
   baseQuery: baseQueryWithRetry,
   refetchOnFocus: false,
-  tagTypes: ["Videos", "VideoCategories"],
+  tagTypes: ["Videos", "VideoCategories", "Subscriptions"],
   endpoints: () => ({}),
 });

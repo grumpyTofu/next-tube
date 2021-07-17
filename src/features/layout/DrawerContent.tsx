@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { topDrawerConfig, middleDrawerConfig, closedDrawerConfig } from "./DrawerConfig";
 import DrawerItem from "./DrawerItem";
-import { Divider, List, Typography } from "@material-ui/core";
+import { Divider, List, Typography, ListItem, ListItemIcon, ListItemProps, ListItemText, Avatar } from "@material-ui/core";
 import { makeStyles, Theme, createStyles, useTheme } from "@material-ui/core/styles";
 import { useMediaQuery } from "@material-ui/core";
 import { useFetchVideoCategoriesQuery } from "../../app/services/videoCategories";
+import { useFetchSubscriptionsQuery } from "../../app/services/subscriptions";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { signOut, useSession } from "next-auth/client";
+import { persistor } from "../../app/store";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,7 +34,17 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.up("md"));
 
-  const { data, isFetching } = useFetchVideoCategoriesQuery();
+  const [session, loading] = useSession();
+
+  const handleSignOut = () => {
+    persistor.purge();
+    signOut({ redirect: false });
+  };
+
+  const videoCategoriesQuery = useFetchVideoCategoriesQuery();
+  const subscriptionsQuery = useFetchSubscriptionsQuery();
+
+  const [subscriptionsOpen, setSubscriptionsOpen] = useState<boolean>(false);
 
   return (
     <div>
@@ -76,13 +92,50 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
               />
             ))}
           </List>
-          <Divider />
-          <div>Subscriptions</div>
-          {!isFetching && data && (
+          {!subscriptionsQuery.isFetching && subscriptionsQuery.data && (
             <>
               <Divider />
-              <Typography style={{ marginBottom: '1rem', paddingLeft: '.5rem'}}>More From Next Tube</Typography>
-              {data.items.map((category) => (
+              <Typography style={{ marginBottom: "1rem", paddingLeft: ".5rem" }}>Subscriptions</Typography>
+              {subscriptionsQuery.data.items.slice(0, 6).map((subscription) => (
+                <DrawerItem
+                  button
+                  href={`https://youtube.com/channel/${subscription.snippet.resourceId.channelId}`}
+                  text={subscription.snippet.title}
+                  style={isMedium ? { paddingLeft: "24px" } : {}}
+                  external
+                  avatar={subscription.snippet.thumbnails.high.url}
+                  key={subscription.id}
+                />
+              ))}
+              {subscriptionsOpen &&
+                subscriptionsQuery.data.items
+                  .slice(7)
+                  .map((subscription) => (
+                    <DrawerItem
+                      button
+                      href={`https://youtube.com/channel/${subscription.snippet.resourceId.channelId}`}
+                      text={subscription.snippet.title}
+                      style={isMedium ? { paddingLeft: "24px" } : {}}
+                      external
+                      avatar={subscription.snippet.thumbnails.high.url}
+                      key={subscription.id}
+                    />
+                  ))}
+              {subscriptionsQuery.data.items.length > 7 && (
+                <ListItem button onClick={() => setSubscriptionsOpen(!subscriptionsOpen)}>
+                  <ListItemIcon style={{ marginTop: "4px", marginBottom: "4px" }}>
+                    {!subscriptionsOpen ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={!subscriptionsOpen ? `Show ${subscriptionsQuery.data.items.slice(7).length} more` : "Show less"} />
+                </ListItem>
+              )}
+            </>
+          )}
+          {!videoCategoriesQuery.isFetching && videoCategoriesQuery.data && (
+            <>
+              <Divider />
+              <Typography style={{ marginBottom: "1rem", paddingLeft: ".5rem" }}>More From Next Tube</Typography>
+              {videoCategoriesQuery.data.items.map((category) => (
                 <DrawerItem
                   button
                   href={`/explore/${category.id}`}
@@ -93,6 +146,14 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
               ))}
             </>
           )}
+          <Divider />
+          <DrawerItem
+            button
+            onClick={handleSignOut}
+            text="Sign Out"
+            icon={<ExitToAppIcon />}
+            style={isMedium ? { paddingLeft: "24px", marginBottom: "2rem" } : {}}
+          />
         </>
       )}
     </div>

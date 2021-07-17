@@ -7,7 +7,6 @@ interface DashboardProps {}
 const Dashboard: React.FC<DashboardProps> = ({}) => {
   const { data, isFetching } = useFetchVideosByCategoryQuery(undefined);
 
-  console.log(data);
   return (
     <Grid container spacing={2} justify="center">
       {isFetching && <div>loading...</div>}
