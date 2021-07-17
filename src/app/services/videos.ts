@@ -63,6 +63,7 @@ export const videosApi = youtubeApi.injectEndpoints({
       providesTags: ["Videos"],
     }),
   }),
+  overrideExisting: true
 });
 
 export const { useFetchVideosByCategoryQuery } = videosApi;

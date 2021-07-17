@@ -1,10 +1,10 @@
 import React from "react";
 import { topDrawerConfig, middleDrawerConfig, closedDrawerConfig } from "./DrawerConfig";
 import DrawerItem from "./DrawerItem";
-import { Divider, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { Divider, List, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles, useTheme } from "@material-ui/core/styles";
 import { useMediaQuery } from "@material-ui/core";
-import { useRouter } from "next/router";
+import { useFetchVideoCategoriesQuery } from "../../app/services/videoCategories";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,7 +27,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
   const classes = useStyles();
   const theme = useTheme();
   const isMedium = useMediaQuery(theme.breakpoints.up("md"));
-  const router = useRouter();
+
+  const { data, isFetching } = useFetchVideoCategoriesQuery();
+
   return (
     <div>
       <div className={classes.toolbar} />
@@ -37,8 +39,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
           {closedDrawerConfig.map((item) => (
             <DrawerItem
               button
-              onClick={() => router.push(item.route)}
-              item={item}
+              href={item.route}
+              icon={item.icon}
+              text={item.text}
               style={{ paddingRight: 0, paddingLeft: 0 }}
               textVisible={false}
               listItemIconStyles={{ marginTop: "4px", marginBottom: "4px", justifyContent: "center", width: "100%" }}
@@ -52,8 +55,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
             {topDrawerConfig.map((item) => (
               <DrawerItem
                 button
-                onClick={() => router.push(item.route)}
-                item={item}
+                href={item.route}
+                icon={item.icon}
+                text={item.text}
                 style={isMedium ? { paddingLeft: "24px" } : {}}
                 key={item.text}
               />
@@ -64,8 +68,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
             {middleDrawerConfig.map((item) => (
               <DrawerItem
                 button
-                onClick={() => router.push(item.route)}
-                item={item}
+                href={item.route}
+                icon={item.icon}
+                text={item.text}
                 style={isMedium ? { paddingLeft: "24px" } : {}}
                 key={item.text}
               />
@@ -73,6 +78,21 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ open }) => {
           </List>
           <Divider />
           <div>Subscriptions</div>
+          {!isFetching && data && (
+            <>
+              <Divider />
+              <Typography style={{ marginBottom: '1rem', paddingLeft: '.5rem'}}>More From Next Tube</Typography>
+              {data.items.map((category) => (
+                <DrawerItem
+                  button
+                  href={`/explore/${category.id}`}
+                  text={category.snippet.title}
+                  style={isMedium ? { paddingLeft: "24px" } : {}}
+                  key={category.id}
+                />
+              ))}
+            </>
+          )}
         </>
       )}
     </div>

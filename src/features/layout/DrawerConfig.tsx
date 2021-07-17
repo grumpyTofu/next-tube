@@ -1,5 +1,4 @@
 import React from "react";
-import type { IDrawerItem } from "./DrawerItem";
 import HomeIcon from "@material-ui/icons/Home";
 import ExploreIcon from "@material-ui/icons/Explore";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
@@ -8,6 +7,12 @@ import HistoryIcon from "@material-ui/icons/History";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import WatchLaterIcon from "@material-ui/icons/WatchLater";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+
+export interface IDrawerItem {
+  text: string;
+  icon: React.ReactElement<any, any>;
+  route: string;
+}
 
 export const topDrawerConfig: IDrawerItem[] = [
   {

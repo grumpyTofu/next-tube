@@ -30,6 +30,7 @@ export const videoCategoriesApi = youtubeApi.injectEndpoints({
       providesTags: ["VideoCategories"],
     }),
   }),
+  overrideExisting: true,
 });
 
 export const { useFetchVideoCategoriesQuery } = videoCategoriesApi;

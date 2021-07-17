@@ -52,6 +52,13 @@ const theme = createMuiTheme({
         backgroundColor: "white",
       },
     },
+    MuiDivider: {
+      root: {
+        backgroundColor: "#303030",
+        height: "2px",
+        marginBottom: "2rem",
+      },
+    },
   },
 });
 

@@ -1,22 +1,21 @@
+import Link from "next/link";
 import { ListItem, ListItemIcon, ListItemProps, ListItemText } from "@material-ui/core";
 
-export interface IDrawerItem {
-  text: string;
-  icon: React.ReactElement<any, any>;
-  route: string;
-}
-
 interface DrawerItemProps extends ListItemProps {
-  item: IDrawerItem;
+  icon?: React.ReactElement<any, any>;
+  text: string;
   textVisible?: boolean;
   listItemIconStyles?: React.CSSProperties;
+  href: string;
 }
 
-const DrawerItem: React.FC<DrawerItemProps> = ({ item, textVisible = true, listItemIconStyles, children, ...props }) => (
-  <ListItem {...(props as any)}>
-    <ListItemIcon style={listItemIconStyles}>{item.icon}</ListItemIcon>
-    {textVisible && <ListItemText primary={item.text} />}
-  </ListItem>
+const DrawerItem: React.FC<DrawerItemProps> = ({ icon, text, href, textVisible = true, listItemIconStyles, children, ...props }) => (
+  <Link href={href}>
+    <ListItem component="a" {...(props as any)}>
+      {icon && <ListItemIcon style={listItemIconStyles}>{icon}</ListItemIcon>}
+      {textVisible && <ListItemText primary={text} />}
+    </ListItem>
+  </Link>
 );
 
 export default DrawerItem;

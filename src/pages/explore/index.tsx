@@ -36,7 +36,7 @@ const ExplorePage: NextPage<ExplorePageProps> = () => {
             </>
           )}
         </Grid>
-        <Divider variant="fullWidth" style={{ backgroundColor: theme.palette.primary.light, height: "3px", marginBottom: "2rem" }} />
+        <Divider variant="fullWidth" />
         <Typography variant="h6" style={{ marginBottom: "1rem" }}>
           Trending Videos
         </Typography>

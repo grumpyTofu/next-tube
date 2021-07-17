@@ -46,7 +46,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, id = null }) => {
   const classes = useStyles();
   return (
     <Link href={id ? `/explore/${id}` : "/explore"}>
-      <Card component="a" className={classes.card} elevation={0}>
+      <Card className={classes.card} elevation={0}>
         <CardContent className={classes.cardContent}>
           <CardMedia className={classes.media} image={image} title={title} />
           <Typography variant="h6" className={classes.text}>

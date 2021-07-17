@@ -1,8 +1,7 @@
 import React from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { CardMedia, Grid, Card, Divider, Typography, CardContent } from "@material-ui/core";
-import CategoryCard from "../../features/CategoryCard";
+import { CardMedia, Grid, Card, Divider, Typography, CardContent, Button } from "@material-ui/core";
 import { useFetchVideosByCategoryQuery } from "../../app/services/videos";
 import { useMediaQuery } from "@material-ui/core";
 import { useTheme } from "@material-ui/core";
@@ -12,44 +11,42 @@ const ExploreIdPage: NextPage = () => {
   const router = useRouter();
   const { pid } = router.query as Record<string, string>;
 
-  const videoCategoriesQuery = useFetchVideoCategoriesQuery();
+  const { category } = useFetchVideoCategoriesQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      category: data?.items.find((category) => category.id === pid),
+    }),
+  });
   const { data, isFetching } = useFetchVideosByCategoryQuery(pid);
 
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("xs"));
 
+  console.log(category);
   return (
     <Grid container justify="center">
-      <Grid item xs={10}>
-        <Grid container spacing={1} style={{ marginBottom: "2rem" }}>
-          {!videoCategoriesQuery.isFetching && videoCategoriesQuery.data && (
-            <>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <CategoryCard title="Trending" />
-              </Grid>
-              {videoCategoriesQuery.data.items.map((item) => {
-                const title = item.snippet.title;
-                return (
-                  <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
-                    <CategoryCard title={title} id={item.id} />
-                  </Grid>
-                );
-              })}
-            </>
-          )}
-        </Grid>
-        <Divider variant="fullWidth" style={{ backgroundColor: theme.palette.primary.light, height: "3px", marginBottom: "2rem" }} />
-        <Typography variant="h6" style={{ marginBottom: "1rem" }}>
-          Trending Videos
-        </Typography>
-        {!isFetching && data && (
+      {!isFetching && data && (
+        <>
+          <Grid item xs={12}>
+            <a href={`https://youtube.com/watch?v=${data.items[0].id}`} target="_blank" rel="no referrer">
+              <CardMedia component="img" image={data.items[0].snippet.thumbnails.high.url} height={data.items[0].snippet.thumbnails.high.height} />
+            </a>
+          </Grid>
+          <Divider variant="fullWidth" />
+          <div style={{ margin: "2rem 0rem", padding: "0rem 1rem", width: "100%", display: "flex" }}>
+            <Typography variant="h4" style={{ textAlign: "left", fontWeight: "bold" }}>
+              {category?.snippet.title}
+            </Typography>
+            <div style={{ flexGrow: 1 }} />
+            <Button color="secondary" variant='contained'>Subscribe</Button>
+          </div>
+          <Divider variant="fullWidth" />
           <Grid container spacing={2}>
-            {data.items.map((video) => (
+            {data.items.slice(1).map((video) => (
               <React.Fragment key={video.id}>
                 <Grid item xs={12} sm={6} md={4} lg={3}>
-                  <Card>
+                  <a href={`https://youtube.com/watch?v=${data.items[0].id}`} target="_blank" rel="no referrer">
                     <CardMedia component="img" image={video.snippet.thumbnails.medium.url} height={video.snippet.thumbnails.medium.height} />
-                  </Card>
+                  </a>
                 </Grid>
                 {!isXs && (
                   <Grid item sm={6} md={8} lg={9}>
@@ -67,8 +64,8 @@ const ExploreIdPage: NextPage = () => {
               </React.Fragment>
             ))}
           </Grid>
-        )}
-      </Grid>
+        </>
+      )}
     </Grid>
   );
 };
