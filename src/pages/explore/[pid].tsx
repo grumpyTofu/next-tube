@@ -27,7 +27,7 @@ const ExploreIdPage: NextPage = () => {
       {!isFetching && data && (
         <>
           <Grid item xs={12}>
-            <a href={`https://youtube.com/watch?v=${data.items[0].id}`} target="_blank" rel="no referrer">
+            <a href={`https://youtube.com/watch?v=${data.items[0].id}`} target="_blank" rel="noreferrer">
               <CardMedia component="img" image={data.items[0].snippet.thumbnails.high.url} height={data.items[0].snippet.thumbnails.high.height} />
             </a>
           </Grid>
@@ -44,7 +44,7 @@ const ExploreIdPage: NextPage = () => {
             {data.items.slice(1).map((video) => (
               <React.Fragment key={video.id}>
                 <Grid item xs={12} sm={6} md={4} lg={3}>
-                  <a href={`https://youtube.com/watch?v=${data.items[0].id}`} target="_blank" rel="no referrer">
+                  <a href={`https://youtube.com/watch?v=${data.items[0].id}`} target="_blank" rel="noreferrer">
                     <CardMedia component="img" image={video.snippet.thumbnails.medium.url} height={video.snippet.thumbnails.medium.height} />
                   </a>
                 </Grid>
